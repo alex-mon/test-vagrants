@@ -1,0 +1,43 @@
+{
+  "blueprint":  "abp-pp-ve-hbase",
+  "host_groups":[
+    {
+      "hosts":[ { "fqdn": "d-pp-amb2-nd-01.ve-pp.com" }
+      ], "name": "hostgroup_admin_ambari_master"
+    },
+    {
+      "hosts":[ { "fqdn": "d-pp-hdp2-mn-01.ve-pp.com" }
+      ], "name": "hostgroup_hbase_hadoop_master_1"
+    },
+    {
+      "hosts":[ { "fqdn": "d-pp-hdp2-dn-01.ve-pp.com" }
+      ], "name": "hostgroup_hbase_hadoop_datanode"
+    }
+  ],
+  "configurations": [
+    {
+      "core-site" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "ha.zookeeper.quorum" : "d-pp-zoo1-nd-01.ve-pp.com:2181"
+        } }
+    },
+    {
+      "yarn-site":{
+        "properties_attributes": { },
+        "properties": {
+          "yarn.resourcemanager.zk-address" : "d-pp-zoo1-nd-01.ve-pp.com:2181"
+        }
+      }
+    },
+    {
+      "hbase-site" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "hbase.zookeeper.quorum" : "d-pp-zoo1-nd-01.ve-pp.com:2181",
+          "hadoop.registry.zk.quorum" : "d-pp-zoo1-nd-01.ve-pp.com:2181"
+        }
+      }
+    }
+  ]
+}

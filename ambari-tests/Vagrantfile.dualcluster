@@ -1,0 +1,182 @@
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    # Number of cluster nodes (excluding the ambari server)
+    cluster_size = 1
+    # Base ip to use, master will have a 0 appended and then each node will add its number to it (1,2,3,4...)
+    base_ip = '192.168.0.1'
+
+    # Machine names will be a composition of the node_base_name, it's node number, and the domain_subfix
+    node_base_name = "node-"
+    domain_subfix = ".cluster"
+
+    # The master will have a simple name, plus the domain_subfix
+    master_hostname = 'ambarimaster'
+    master_fqdn = master_hostname + domain_subfix
+
+    # Machines' local user to provision through ambari via its private key
+    user = 'root'
+    # The file name of the shared ssh key for $user
+    masterKey = 'master_key.pub'
+
+    # The path where files are shared between machines
+    sharePath = '/mnt/vshare'
+    # The puppet folder needs to be shared explicitly for the provisioning to work
+    config.vm.synced_folder 'puppet', '/puppet'
+    config.vm.synced_folder '.', '/vagrant', disabled: true
+    config.vm.synced_folder 'share', sharePath, create: true
+
+    config.vm.box = 'puppetlabs/centos-7.0-64-puppet-enterprise'
+
+    # Ambari master node provisioning.
+    config.vm.define master_fqdn, primary: true do |ambariserver|
+      ambariserver.vm.hostname = master_fqdn
+      ambariserver.vm.network :private_network, ip: base_ip + '0'
+      ambariserver.vm.network :forwarded_port, guest: 8080, host: 8080
+
+      ambariserver.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", 2048]
+      end
+
+      ambariserver.vm.provision :puppet do |puppet|
+        puppet.manifests_path   = 'puppet/manifests'
+        puppet.module_path      = 'puppet/modules'
+        puppet.manifest_file    = 'ambariserver.pp'
+        puppet.options          = '--verbose'
+        puppet.facter           = {
+            'master_hostname'     => master_hostname,
+            'node_base_name'      => node_base_name,
+            'domain_subfix'       => domain_subfix,
+            'base_ip'             => base_ip,
+            'cluster_size'        => cluster_size,
+            'share_path'          => sharePath,
+            'shared_key'          => masterKey,
+            'user'                => user
+        }
+      end
+    end
+
+
+
+  # Nodes provision
+  1.upto(cluster_size) do |index|
+    node_name = node_base_name + index.to_s + domain_subfix
+
+    config.vm.define node_name do |node|
+      node.vm.hostname = node_name
+      node.vm.network :private_network, ip: base_ip + index.to_s
+      node.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", 1024]
+      end
+
+      # start the actual provisioning
+      node.vm.provision :puppet do |puppet|
+        puppet.manifests_path = 'puppet/manifests'
+        puppet.manifest_file  = 'clusternode.pp'
+        puppet.module_path    = 'puppet/modules'
+        puppet.options        = '--verbose'
+        puppet.facter         = {
+          'master_hostname'     => master_hostname,
+          'node_base_name'      => node_base_name,
+          'domain_subfix'       => domain_subfix,
+          'node_index'          => index,
+          'base_ip'             => base_ip,
+          'cluster_size'        => cluster_size,
+          'share_path'          => sharePath,
+          'shared_key'          => masterKey,
+          'user'                => user
+        }
+      end
+    end # node
+  end # nodes provision
+
+
+
+
+
+  # Number of cluster nodes (excluding the ambari server)
+  clusterb_size = 4
+  # Base ip to use, master will have a 0 appended and then each node will add its number to it (1,2,3,4...)
+  baseb_ip = '192.168.0.2'
+
+  # Machine names will be a composition of the node_base_name, it's node number, and the domain_subfix
+  nodeb_base_name = "nodeb-"
+
+  # The master will have a simple name, plus the domain_subfix
+  masterb_hostname = 'ambarimasterb'
+  masterb_fqdn = masterb_hostname + domain_subfix
+
+
+  # Ambari master 2  node provisioning.
+  config.vm.define masterb_fqdn, primary: true do |ambariserver|
+    ambariserver.vm.hostname = masterb_fqdn
+    ambariserver.vm.network :private_network, ip: baseb_ip + '0'
+    ambariserver.vm.network :forwarded_port, guest: 8080, host: 8081
+
+    ambariserver.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", 2048]
+    end
+
+    ambariserver.vm.provision :puppet do |puppet|
+      puppet.manifests_path   = 'puppet/manifests'
+      puppet.module_path      = 'puppet/modules'
+      puppet.manifest_file    = 'ambariserver.pp'
+      puppet.options          = '--verbose'
+      puppet.facter           = {
+          'master_hostname'     => masterb_hostname,
+          'node_base_name'      => nodeb_base_name,
+          'domain_subfix'       => domain_subfix,
+          'base_ip'             => baseb_ip,
+          'cluster_size'        => clusterb_size,
+          'share_path'          => sharePath,
+          'shared_key'          => masterKey,
+          'user'                => user
+      }
+    end
+  end
+
+  # Nodes provision
+  1.upto(clusterb_size) do |index|
+    nodeb_name = nodeb_base_name + index.to_s + domain_subfix
+
+    config.vm.define nodeb_name do |node|
+      node.vm.hostname = nodeb_name
+      node.vm.network :private_network, ip: baseb_ip + index.to_s
+      node.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", 1024]
+      end
+
+      # start the actual provisioning
+      node.vm.provision :puppet do |puppet|
+        puppet.manifests_path = 'puppet/manifests'
+        puppet.manifest_file  = 'clusternode.pp'
+        puppet.module_path    = 'puppet/modules'
+        puppet.options        = '--verbose'
+        puppet.facter         = {
+          'master_hostname'     => masterb_hostname,
+          'node_base_name'      => nodeb_base_name,
+          'domain_subfix'       => domain_subfix,
+          'node_index'          => index,
+          'base_ip'             => baseb_ip,
+          'cluster_size'        => clusterb_size,
+          'share_path'          => sharePath,
+          'shared_key'          => masterKey,
+          'user'                => user
+        }
+      end
+    end # node
+  end # nodes provision
+
+end
+
+
+
+# 192.168.0.10  ambarimaster.cluster
+# 192.168.0.11  node-1.cluster
+# 192.168.0.20  ambarimasterb.cluster
+# 192.168.0.21  nodeb-1.cluster
+# 192.168.0.22  nodeb-2.cluster
+# 192.168.0.23  nodeb-3.cluster
+# 192.168.0.24  nodeb-4.cluster

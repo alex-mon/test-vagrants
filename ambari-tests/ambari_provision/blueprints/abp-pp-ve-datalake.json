@@ -1,0 +1,143 @@
+{
+  "Blueprints": {
+    "blueprint_name" : "abp-pp-ve-datalake",
+    "stack_name" : "HDP",
+    "stack_version" : "2.3"
+  },
+  "host_groups" : [
+    {
+      "name" : "hostgroup_admin_ambari_master",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "AMBARI_SERVER" },
+        { "name" : "METRICS_COLLECTOR" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_coordination_zookeeper",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "ZOOKEEPER_SERVER" },
+        { "name" : "METRICS_MONITOR"  }
+      ]
+    },
+    {
+      "name" : "hostgroup_hadoop_master_1",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "NAMENODE" },
+        { "name" : "ZKFC" },
+        { "name" : "JOURNALNODE"},
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_hadoop_master_2",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "NAMENODE" },
+        { "name" : "ZKFC" },
+        { "name" : "JOURNALNODE" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_hadoop_master_3",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "JOURNALNODE"},
+        { "name" : "RESOURCEMANAGER" },
+        { "name" : "APP_TIMELINE_SERVER" },
+        { "name" : "SPARK_JOBHISTORYSERVER" },
+        { "name" : "HISTORYSERVER" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_hadoop_datanode",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "NODEMANAGER" },
+        { "name" : "DATANODE" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_access_node",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "SPARK_CLIENT" },
+        { "name" : "YARN_CLIENT" },
+        { "name" : "HDFS_CLIENT" },
+        { "name" : "HIVE_SERVER" },
+        { "name" : "SQOOP" },
+        { "name" : "TEZ_CLIENT" },
+        { "name" : "ZOOKEEPER_CLIENT" },
+        { "name" : "PIG" },
+        { "name" : "MAPREDUCE2_CLIENT" },
+        { "name" : "OOZIE_CLIENT" },
+        { "name" : "OOZIE_SERVER" },
+        { "name" : "HIVE_CLIENT" },
+        { "name" : "WEBHCAT_SERVER" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_hcat",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "MYSQL_SERVER" },
+        { "name" : "HIVE_METASTORE" },
+        { "name" : "HCAT" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_queuing_kafka",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "KAFKA_BROKER" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_queuing_flume",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "FLUME_HANDLER" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    }
+  ],
+  "configurations" : [
+    {
+      "core-site" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "fs.defaultFS" : "hdfs://ve-datalake",
+          "ha.zookeeper.quorum" : "%HOSTGROUP::hostgroup_coordination_zookeeper%:2181"
+        } }
+    },
+    {
+      "hdfs-site" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "dfs.client.failover.proxy.provider.ve-datalake" : "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
+          "dfs.ha.automatic-failover.enabled" : "true",
+          "dfs.ha.fencing.methods" : "shell(/bin/true)",
+          "dfs.ha.namenodes.ve-datalake" : "nn1,nn2",
+          "dfs.namenode.http-address" : "%HOSTGROUP::hostgroup_hadoop_master_1%:50070",
+          "dfs.namenode.http-address.ve-datalake.nn1" : "%HOSTGROUP::hostgroup_hadoop_master_1%:50070",
+          "dfs.namenode.http-address.ve-datalake.nn2" : "%HOSTGROUP::hostgroup_hadoop_master_2%:50070",
+          "dfs.namenode.https-address" : "%HOSTGROUP::hostgroup_hadoop_master_1%:50470",
+          "dfs.namenode.https-address.ve-datalake.nn1" : "%HOSTGROUP::hostgroup_hadoop_master_1%:50470",
+          "dfs.namenode.https-address.ve-datalake.nn2" : "%HOSTGROUP::hostgroup_hadoop_master_2%:50470",
+          "dfs.namenode.rpc-address.ve-datalake.nn1" : "%HOSTGROUP::hostgroup_hadoop_master_1%:8020",
+          "dfs.namenode.rpc-address.ve-datalake.nn2" : "%HOSTGROUP::hostgroup_hadoop_master_2%:8020",
+          "dfs.namenode.shared.edits.dir" : "qjournal://%HOSTGROUP::hostgroup_hadoop_master_1%:8485;%HOSTGROUP::hostgroup_hadoop_master_2%:8485;%HOSTGROUP::hostgroup_hadoop_master_3%:8485/ve-datalake",
+          "dfs.nameservices" : "ve-datalake"
+        } }
+    }
+  ]
+}

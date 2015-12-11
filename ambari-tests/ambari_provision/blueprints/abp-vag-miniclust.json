@@ -1,0 +1,30 @@
+
+  {
+    "Blueprints": {
+    "blueprint_name" : "abp-vag-miniclust",
+    "stack_name" : "HDP",
+    "stack_version" : "2.3"
+  },
+  "host_groups" : [
+    {
+      "name" : "hostgroup_admin_ambari_master",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "AMBARI_SERVER" },
+        { "name" : "METRICS_COLLECTOR" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_coordination_zookeeper",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "ZOOKEEPER_SERVER" },
+        { "name" : "METRICS_MONITOR"  }
+      ]
+    }
+  ],
+  "configurations" : [
+
+  ]
+}
