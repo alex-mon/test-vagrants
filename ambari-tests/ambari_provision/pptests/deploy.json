@@ -1,0 +1,37 @@
+{
+  "blueprint":  "blueprint-vagrant-ve-datalake",
+  "default_password": "password",
+  "host_groups":[
+    {
+      "hosts":[ { "fqdn": "ambarimaster.cluster" }
+      ], "name": "hostgroup_admin_ambari_master"
+    },
+    {
+      "hosts":[ { "fqdn": "node-1.cluster" }
+      ], "name": "hostgroup_hadoop_master_1"
+    },
+    {
+      "hosts":[
+          { "fqdn": "node-2.cluster" }
+      ], "name": "hostgroup_hadoop_datanode"
+    },
+    {
+      "hosts":[
+        { "fqdn": "node-3.cluster" }
+      ], "name": "hostgroup_coordination_zookeeper"
+    },
+    {
+      "hosts": [
+        { "fqdn": "node-4.cluster" }
+      ], "name": "hostgroup_access_node"
+    },
+    {
+      "hosts":[
+        { "fqdn": "node-5.cluster" }
+      ], "name": "hostgroup_hcat"
+    }
+  ],
+  "configurations":[
+
+  ]
+}

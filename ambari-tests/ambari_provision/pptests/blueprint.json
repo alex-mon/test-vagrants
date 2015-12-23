@@ -1,0 +1,147 @@
+{
+  "Blueprints": {
+    "blueprint_name" : "blueprint-vagrant-ve-datalake",
+    "stack_name" : "HDP",
+    "stack_version" : "2.3"
+  },
+  "host_groups" : [
+    {
+      "name" : "hostgroup_admin_ambari_master",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "AMBARI_SERVER" },
+        { "name" : "METRICS_COLLECTOR" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_coordination_zookeeper",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "ZOOKEEPER_SERVER" },
+        { "name" : "METRICS_MONITOR"  }
+      ]
+    },
+    {
+      "name" : "hostgroup_hadoop_master_1",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "NAMENODE" },
+        { "name" : "SECONDARY_NAMENODE"},
+        { "name" : "RESOURCEMANAGER" },
+        { "name" : "APP_TIMELINE_SERVER" },
+        { "name" : "SPARK_JOBHISTORYSERVER" },
+        { "name" : "HISTORYSERVER" },
+        { "name" : "HBASE_MASTER" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_hadoop_datanode",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "NODEMANAGER" },
+        { "name" : "DATANODE" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_access_node",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "SPARK_CLIENT" },
+        { "name" : "YARN_CLIENT" },
+        { "name" : "HDFS_CLIENT" },
+        { "name" : "HIVE_SERVER" },
+        { "name" : "SQOOP" },
+        { "name" : "TEZ_CLIENT" },
+        { "name" : "ZOOKEEPER_CLIENT" },
+        { "name" : "PIG" },
+        { "name" : "MAPREDUCE2_CLIENT" },
+        { "name" : "OOZIE_CLIENT" },
+        { "name" : "OOZIE_SERVER" },
+        { "name" : "HIVE_CLIENT" },
+        { "name" : "WEBHCAT_SERVER" },
+        { "name" : "HCAT" },
+        { "name" : "PHOENIX_QUERY_SERVER"},
+        { "name" : "HBASE_CLIENT"},
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_hcat",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "MYSQL_SERVER" },
+        { "name" : "HIVE_METASTORE" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_queuing_kafka",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "KAFKA_BROKER" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    },
+    {
+      "name" : "hostgroup_queuing_flume",
+      "cardinality" : "1",
+      "components" : [
+        { "name" : "FLUME_HANDLER" },
+        { "name" : "HBASE_CLIENT" },
+        { "name" : "METRICS_MONITOR" }
+      ]
+    }
+  ],
+  "configurations" : [
+    {
+      "core-site" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "hadoop.proxyuser.root.groups" : "*",
+          "hadoop.proxyuser.root.hosts" : "*",
+          "hadoop.proxyuser.hue.groups" : "*",
+          "hadoop.proxyuser.hue.hosts" : "*",
+          "hadoop.proxyuser.hive.groups" : "*",
+          "hadoop.proxyuser.hive.hosts" : "*",
+          "hadoop.proxyuser.httpfs.groups" : "*",
+          "hadoop.proxyuser.httpfs.hosts" : "*"
+        }
+      }
+    },
+    {
+      "hbase-env":{
+        "properties-attributes": { },
+        "properties": {
+            "phoenix_sql_enabled" : "true"
+        }
+      }
+    },
+    {
+      "oozie-site" : {
+        "properties_attributes" : {},
+        "properties" : {
+          "oozie.service.ProxyUserService.proxyuser.root.hosts" : "*",
+          "oozie.service.ProxyUserService.proxyuser.root.groups" : "*",
+          "oozie.service.ProxyUserService.proxyuser.hue.hosts" : "*",
+          "oozie.service.ProxyUserService.proxyuser.hue.groups" : "*"
+        }
+      }
+    },
+    {
+      "webhcat-site" : {
+        "properties_attributes" : {},
+        "properties" : {
+          "webhcat.proxyuser.root.groups" : "*",
+          "webhcat.proxyuser.root.hosts" : "*",
+          "webhcat.proxyuser.hue.hosts" : "*",
+          "webhcat.proxyuser.hue.groups" : "*",
+          "webhcat.proxyuser.hive.hosts" : "*",
+          "webhcat.proxyuser.hive.groups" : "*"
+        }
+      }
+    }
+  ]
+}

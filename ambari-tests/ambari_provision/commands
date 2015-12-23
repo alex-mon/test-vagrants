@@ -15,7 +15,7 @@ curl  -H "X-Requested-By: admin" --user admin:admin -X POST http://localhost:808
 
 
 ; CREATE BLUEPRINT
-curl  -H "X-Requested-By: admin" --user admin:admin -X POST http://localhost:8080/api/v1/blueprints/BLUEPRINT_NAME?validate_topology=false --data "@blueprint_tests.json"
+curl  -H "X-Requested-By: admin" --user admin:admin -X POST http://localhost:8080/api/v1/blueprints/BLUEPRINT_NAME?validate_topology=false --data "@blueprint.json"
 
 ; CREATE CLUSTER WITH BLUEPRINT TEMPLATE
-curl  -H "X-Requested-By: admin" --user admin:admin -X POST http://localhost:8080/api/v1/clusters/CLUSTER_NAME --data "@body_create_processing_cluster.json"
+curl  -H "X-Requested-By: admin" --user admin:admin -X POST http://localhost:8080/api/v1/clusters/CLUSTER_NAME --data "@deploy.json"
