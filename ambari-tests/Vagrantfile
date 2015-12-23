@@ -7,7 +7,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     cluster_size = 5
     # Base ip to use, master will have a 0 appended and then each node will add its number to it (1,2,3,4...)
     base_ip = '192.168.0.1'
-
+    boxCentOS7 = 'puppetlabs/centos-7.0-64-puppet-enterprise'
+    boxCentOS6 = 'puppetlabs/centos-6.6-64-puppet'
+    boxUbuntuTrusty = 'ubuntu/trusty64'
     # Machine names will be a composition of the node_base_name, it's node number, and the domain_subfix
     node_base_name = "node-"
     domain_subfix = ".cluster"
@@ -28,10 +30,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.synced_folder '.', '/vagrant', disabled: true
     config.vm.synced_folder 'share', sharePath, create: true
 
-    config.vm.box = 'puppetlabs/centos-7.0-64-puppet-enterprise'
+    #config.vm.box = 'puppetlabs/centos-7.0-64-puppet-enterprise'
+    # puppetlabs/centos-6.6-64-puppet
 
     # Ambari master node provisioning.
     config.vm.define master_fqdn, primary: true do |ambariserver|
+      ambariserver.vm.box = boxCentOS7
       ambariserver.vm.hostname = master_fqdn
       ambariserver.vm.network :private_network, ip: base_ip + '0'
       ambariserver.vm.network :forwarded_port, guest: 8080, host: 8080
@@ -64,6 +68,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     node_name = node_base_name + index.to_s + domain_subfix
 
     config.vm.define node_name do |node|
+      node.vm.box = boxCentOS7
       node.vm.hostname = node_name
       node.vm.network :private_network, ip: base_ip + index.to_s
       node.vm.provider :virtualbox do |vb|
@@ -90,5 +95,25 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
     end # node
   end # nodes provision
+
+#  config.vm.define 'hue.cluster' do |hueclient|
+#    hueclient.vm.box = boxCentOS6
+#    hueclient.vm.hostname = 'hue.cluster'
+#    hueclient.vm.network :private_network, ip: base_ip + '00'
+
+#    hueclient.vm.provider :virtualbox do |vb|
+#      vb.customize ["modifyvm", :id, "--memory", 1024]
+#    end
+#  end
+
+#  config.vm.define 'huebuntu.cluster' do |huebuntu_client|
+#    huebuntu_client.vm.box = boxUbuntuTrusty
+#    huebuntu_client.vm.hostname = 'huebuntu.cluster'
+#    huebuntu_client.vm.network :private_network, ip: base_ip + '01'
+
+#    huebuntu_client.vm.provider :virtualbox do |vb|
+#      vb.customize ["modifyvm", :id, "--memory", 1024]
+#    end
+#  end
 
 end
