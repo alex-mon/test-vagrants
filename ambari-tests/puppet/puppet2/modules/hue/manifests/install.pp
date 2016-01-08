@@ -22,8 +22,6 @@ class hue::install(
     }
   }
 
-
-
   package{ $common_packages:
     ensure => present,
   }
@@ -57,7 +55,7 @@ class hue::install(
     command => '/usr/bin/make install',
     cwd     => "${working_dir}/${hue_release_package_folder}",
     creates => $hue_install_dir,
-    timeout => '0',
+    timeout => '900',
     require => Exec['decompress_hue_package'],
   }
 
@@ -94,5 +92,5 @@ class hue::install(
   }
 
  # TO-DO: INSTALL LIVI SERVER /tmp/hue/apps/spark/java && mvn -DskipTests -Dspark.version=1.4.1 -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true clean package
- # TO-DO: INSTALL SQOOP2
+ # TO-DO: FIND A WQAY TO INSTALL SQOOP2 OR MAKE IT WORK WITH THE CURRENT HDP'S SQOOP DISTRIBUTION
 }
