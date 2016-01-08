@@ -1,0 +1,1 @@
+sudo puppet apply -d --modulepath=puppet2/modules puppet2/manifests/nodes.pp
