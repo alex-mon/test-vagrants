@@ -2,7 +2,7 @@ node 'node-4.cluster' {
 
   $config_values = {
     'hadoop' => {
-      'fs_defaultfs'            => 'hdfs://node-1.cluster:8020',
+      'fs_defaultfs'            => '',
       'webhdfs_url'             => "http://node-1.cluster:50070/webhdfs/v1",
       'resourcemanager_host'    => "node-1.cluster",
       'resourcemanager_api_url' => "http://node-1.cluster:8088",

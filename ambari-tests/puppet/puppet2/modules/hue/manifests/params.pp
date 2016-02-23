@@ -9,12 +9,11 @@ class hue::params {
   $hue_config_file            = '/usr/local/hue/desktop/conf/hue.ini'
   $hue_bin_dir                = '/usr/local/hue/build/env/bin'
   $hue_log_dir                = '/var/log/hue'
-  $install_java_jdk           = 'true'
+  $install_java_jdk           = true
 
   # Cluster's config
   $config_values = {
     'hadoop' => {
-      'fs_defaultfs'            => 'hdfs://node-1.cluster:8020',
       'webhdfs_url'             => "http://${::fqdn}:50070/webhdfs/v1",
       'resourcemanager_host'    => $::fqdn,
       'resourcemanager_api_url' => "http://${::fqdn}:8088",
