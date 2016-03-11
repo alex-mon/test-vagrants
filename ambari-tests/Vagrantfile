@@ -4,7 +4,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Number of cluster nodes (excluding the ambari server)
-    cluster_size = 5
+    cluster_size = 2
     # Base ip to use, master will have a 0 appended and then each node will add its number to it (1,2,3,4...)
     base_ip = '192.168.0.1'
     boxCentOS7 = 'puppetlabs/centos-7.0-64-puppet-enterprise'
@@ -72,7 +72,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       node.vm.hostname = node_name
       node.vm.network :private_network, ip: base_ip + index.to_s
       node.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--memory", 1024]
+        vb.customize ["modifyvm", :id, "--memory", 2024]
       end
 
       # start the actual provisioning

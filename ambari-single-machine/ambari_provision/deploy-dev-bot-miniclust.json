@@ -1,9 +1,0 @@
-{
-  "blueprint":  "abp-dev-bot-miniclust",
-  "host_groups":[
-    {
-      "hosts":[ { "fqdn": "ambarimaster.cluster" }
-      ], "name": "hostgroup_everything"
-    }
-  ]
-}
