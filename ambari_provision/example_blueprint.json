@@ -1,6 +1,6 @@
 {
   "Blueprints": {
-    "blueprint_name" : "blueprint-vagrant-ve-datalake",
+    "blueprint_name" : "blueprint-vagrant-my-cluster",
     "stack_name" : "HDP",
     "stack_version" : "2.3"
   },

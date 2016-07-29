@@ -1,5 +1,5 @@
 {
-  "blueprint":  "blueprint-vagrant-ve-datalake",
+  "blueprint":  "blueprint-vagrant-my-cluster",
   "default_password": "password",
   "host_groups":[
     {

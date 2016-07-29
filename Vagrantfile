@@ -96,24 +96,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end # node
   end # nodes provision
 
-#  config.vm.define 'hue.cluster' do |hueclient|
-#    hueclient.vm.box = boxCentOS6
-#    hueclient.vm.hostname = 'hue.cluster'
-#    hueclient.vm.network :private_network, ip: base_ip + '00'
-
-#    hueclient.vm.provider :virtualbox do |vb|
-#      vb.customize ["modifyvm", :id, "--memory", 1024]
-#    end
-#  end
-
-#  config.vm.define 'huebuntu.cluster' do |huebuntu_client|
-#    huebuntu_client.vm.box = boxUbuntuTrusty
-#    huebuntu_client.vm.hostname = 'huebuntu.cluster'
-#    huebuntu_client.vm.network :private_network, ip: base_ip + '01'
-
-#    huebuntu_client.vm.provider :virtualbox do |vb|
-#      vb.customize ["modifyvm", :id, "--memory", 1024]
-#    end
-#  end
-
 end
