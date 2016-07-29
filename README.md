@@ -23,6 +23,7 @@ In order to change the number of ambari-agent nodes, you will need to edit the *
 3. Open a console and navigate to the folder where the *Vagrantfile* file is located
 4. Run the command `vagrant up` to launch the machines creation and provision.
 5. Once the process finishes, the [Ambari UI](http://192.168.0.10:8080 "Ambari") should be accessible
+   - The default credentials for the Ambari UI are admin/admin
 6. It's possible to suspend and resume the cluster machines using the commands `vagrant suspend` and `vagrant resume`
 7. To ssh into the nodes: `ssh node-x.cluster`
 8. To destroy the cluster use the command `vagrant destroy`
