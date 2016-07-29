@@ -1,8 +1,8 @@
 # vagrant-ambari-cluster
  
-This vagrant file will deploy a cluster with an ambari-server and up to 9 nodes with ambari-agent service installed
+This vagrant file will deploy a cluster with an ambari-server and up to 9 nodes with the ambari-agent service installed
 
-By default, the machines will have 2Gb of ram.
+By default, the machines will have 2Gb of Ram.
 
 In order to change the number of ambari-agent nodes, you will need to edit the *VagrantFile* and change the parameter named *cluster_size*
 
@@ -30,4 +30,4 @@ In order to change the number of ambari-agent nodes, you will need to edit the *
 # Deploying a cluster using Blueprints
 With ambari, there are two ways to deploy a cluster. 
 - The first and simplest way to do it is using the assisted wizards of the ambari web.
-- The second way to deploy is throug [Ambari Blueprints](https://cwiki.apache.org/confluence/display/AMBARI/Blueprints "Ambari Blueprints"). There is a simple example in the `ambari_blueprint_provision` folder.
+- The second way to deploy is through [Ambari Blueprints](https://cwiki.apache.org/confluence/display/AMBARI/Blueprints "Ambari Blueprints"). There is a simple example in the `ambari_blueprint_provision` folder.
