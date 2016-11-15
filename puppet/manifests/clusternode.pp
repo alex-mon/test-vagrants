@@ -12,8 +12,9 @@ hosts::populate { 'add ips to hosts file':
   node_base_name  => $node_base_name,
   domain_subfix   => $domain_subfix,
   cluster_size    => $cluster_size,
-  base_ip         => $base_ip
-}->
+  server_ip       => $server_ip,
+  slave_base_ip   => $slave_base_ip,
+} ->
 
 /*
 # @todo: Refactor the dependencies so that this doesn't get called

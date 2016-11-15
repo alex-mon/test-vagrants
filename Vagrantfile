@@ -6,7 +6,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Number of cluster nodes (excluding the ambari server)
     cluster_size = 2
     # Base ip to use, master will have a 0 appended and then each node will add its number to it (1,2,3,4...)
-    base_ip = '192.168.0.1'
+    slave_base_ip = '192.168.30.'
+    server_ip = '192.168.30.10'
     boxCentOS7 = 'puppetlabs/centos-7.0-64-puppet-enterprise'
     boxCentOS6 = 'puppetlabs/centos-6.6-64-puppet'
     boxUbuntuTrusty = 'ubuntu/trusty64'
@@ -37,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define master_fqdn, primary: true do |ambariserver|
       ambariserver.vm.box = boxCentOS7
       ambariserver.vm.hostname = master_fqdn
-      ambariserver.vm.network :private_network, ip: base_ip + '0'
+      ambariserver.vm.network :private_network, ip: server_ip
       ambariserver.vm.network :forwarded_port, guest: 8080, host: 8080
 
       ambariserver.vm.provider :virtualbox do |vb|
@@ -53,7 +54,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             'master_hostname'     => master_hostname,
             'node_base_name'      => node_base_name,
             'domain_subfix'       => domain_subfix,
-            'base_ip'             => base_ip,
+            'server_ip'           => server_ip,
+            'slave_base_ip'       => slave_base_ip,
             'cluster_size'        => cluster_size,
             'share_path'          => sharePath,
             'shared_key'          => masterKey,
@@ -70,7 +72,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define node_name do |node|
       node.vm.box = boxCentOS7
       node.vm.hostname = node_name
-      node.vm.network :private_network, ip: base_ip + index.to_s
+      node.vm.network :private_network, ip: "192.168.30.#{20 + index}"
       node.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--memory", 2024]
       end
@@ -86,7 +88,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           'node_base_name'      => node_base_name,
           'domain_subfix'       => domain_subfix,
           'node_index'          => index,
-          'base_ip'             => base_ip,
+          'server_ip'           => server_ip,
+          'slave_base_ip'       => slave_base_ip,
           'cluster_size'        => cluster_size,
           'share_path'          => sharePath,
           'shared_key'          => masterKey,

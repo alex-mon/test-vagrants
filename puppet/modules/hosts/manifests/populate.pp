@@ -4,7 +4,8 @@ define hosts::populate(
     $node_base_name,
     $domain_subfix,
     $cluster_size,
-    $base_ip
+    $server_ip,
+    $slave_base_ip,
 ) {
 
   resources { 'host':
@@ -13,12 +14,12 @@ define hosts::populate(
 
   host { 'add master':
     name  => "${master_name}${domain_subfix}",
-    ip    => "${base_ip}0"
+    ip    => "${server_ip}"
   }
 
   hosts::addnodes { "add ${node_base_name}${cluster_size}${domain_subfix}":
     count => $cluster_size,
-    base_ip  => $base_ip,
+    base_ip  => $slave_base_ip,
     base_name => $node_base_name,
     domain_subfix => $domain_subfix
   }

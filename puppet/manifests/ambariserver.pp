@@ -14,7 +14,8 @@ hosts::populate { 'add ips to hosts file':
   node_base_name  => $node_base_name,
   domain_subfix   => $domain_subfix,
   cluster_size    => $cluster_size,
-  base_ip         => $base_ip
+  server_ip       => $server_ip,
+  slave_base_ip   => $slave_base_ip,
 } ->
 
 /*
@@ -39,6 +40,7 @@ ssh::key::import{ 'import master key to itself':
   require     => Ssh::Key::Export['copy to shared folder']
 }->
 */
+
 
 # Install and enable ambari server
 class { 'ambari_server':
